@@ -1,0 +1,140 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>基本地图展示</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css" />
+    <script src="/assets/js/jquery.js"></script>
+    <script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
+    <script src="http://webapi.amap.com/maps?v=1.4.6&key=您申请的key值"></script>
+   
+</head>
+<body>
+    <div id="container"></div> 
+    <script> 
+        var markers = [];
+        LoadMap = function (scale, center) {
+            console.log(scale);
+            console.log(center);
+            
+             map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: scale,
+                center: center
+            });
+            map.plugin(["AMap.ToolBar"], function () {
+                map.addControl(new AMap.ToolBar());
+            });
+            if (location.href.indexOf('&guide=1') !== -1) {
+                map.setStatus({ scrollWheel: false })
+            }
+            AMapUI.loadUI([
+                'overlay/SimpleMarker',//SimpleMarker
+                'overlay/SimpleInfoWindow',//SimpleInfoWindow
+            ],
+                function (SimpleMarker, SimpleInfoWindow) {
+                    var mapList = mapApi.getMapPoints(); //获取地图坐标集合
+                    
+                    var items = JSON.parse(mapList);
+                    console.log(items);
+                    for (var i = 0; i < items.length; i++) {
+                        //创建SimpleMarker实例
+                        var point = [items[i].X, items[i].Y];
+                        console.log(point);
+                        var marker = new SimpleMarker({
+                            //前景文字
+                            iconLabel: items[i].Lable,
+                            //图标主题
+                            iconTheme: 'default',
+                            //背景图标样式
+                            iconStyle: 'blue',
+                            map: map,
+                            position: point,
+                            label: {
+                                content: items[i].Name,
+                                offset: new AMap.Pixel(27, 25)
+                            }
+                        });
+                        marker.Id = items[i].Name;
+                        markers.push(marker);
+                    }
+                    //AddMapPoint();
+                    console.log(markers);
+                });
+        }
+          
+    </script>    
+    <script>
+        $(document).ready(function () {
+             //添加坐标点标记
+            AddMapPoint = function (lable, name, coord) {
+                console.log(lable);
+                console.log(name);
+                console.log(coord);
+                var point =[coord[0], coord[1]]; //X,Y
+                AMapUI.loadUI(['overlay/SimpleMarker'], function (SimpleMarker) {
+                   var marker= new SimpleMarker({
+                        iconTheme: 'default',
+                        //使用内置的iconStyle
+                        iconStyle: 'blue',
+                        //图标文字
+                        iconLabel: {                            
+                            innerHTML: '<i>' + lable + '</i>',
+                            style: { 
+                                color: '#333'
+                            }
+                        },
+                        //显示定位点
+                       // showPositionPoint:true,
+                        map: map,
+                        position: point, 
+                        label: {
+                            content: name,
+                            offset: new AMap.Pixel(27, 25)
+                        }
+                    });
+                    marker.Id = name;
+                    markers.push(marker);
+                });
+            }
+
+            UpdateMapPoint = function (icon, name, coord) {     
+                var point = [coord[0], coord[1]]; //X,Y
+                for (var i = 0; i < markers.length; i++) {
+                    var item = markers[i];
+                    if (item.Id === name) {
+                        console.log(item);
+                        item.Id = name;
+                        item.setPosition(point); //更新点标记位置
+                        //item.setIcon(null);
+                        //var img = new AMap.Icon({
+                        //    size: new AMap.Size(40, 50),  //图标大小
+                        //    image: icon,
+                        //});
+                        //  item.setIcon(img);//更新图片
+                        break;
+                    }
+                }
+            }
+
+            DelMapPoint = function (name) { 
+                console.log(11111); 
+                for (var i = 0; i < markers.length; i++) {
+                    var item = markers[i];
+                    if (item.Id === name) {
+                        console.log(item);
+                        item.setMap(null);
+                        item = null;
+                        break;
+                    }
+                } 
+            }
+
+        });
+    </script>
+    <!--引入UI组件库（1.0版本） -->
+    <script src="http://webapi.amap.com/ui/1.0/main.js"></script>
+</body>
+</html>
