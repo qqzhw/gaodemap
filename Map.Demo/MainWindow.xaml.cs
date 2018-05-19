@@ -59,7 +59,8 @@ namespace Map.Demo
             point.Name = "川A6689警";
             point.X = 104.052225;
             point.Y = 30.634445;
-          
+            point.PointColor = "red";
+            point.ImgSource = "http://vdata.amap.com/icons/b18/1/2.png";
             //获取数据集合添加点位
             mapControl.UpdateMapPoint(point);
         }
@@ -71,6 +72,7 @@ namespace Map.Demo
             point.Name = "川A6689警";
             point.X = 104.062225;
             point.Y = 30.580002;
+            point.PointColor = "black";
             //获取数据集合添加点位
             mapControl.AddMapPoint(point);
         }

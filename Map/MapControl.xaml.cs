@@ -109,7 +109,7 @@ namespace Map
         {
             if (mapPoint == null)
                 return;
-            string method=string.Format("AddMapPoint('{0}','{1}',[{2},{3}]);",mapPoint.Lable,mapPoint.Name,mapPoint.X,mapPoint.Y);
+            string method=string.Format("AddMapPoint('{0}','{1}',[{2},{3}],'{4}');",mapPoint.Lable,mapPoint.Name,mapPoint.X,mapPoint.Y, mapPoint.PointColor);
             browser.ExecuteScriptAsync(method);
         }
         /// <summary>
@@ -145,7 +145,7 @@ namespace Map
         {
             if (mapPoint == null)
                 return;
-            string method = string.Format("UpdateMapPoint('{0}','{1}',[{2},{3}]);", mapPoint.ImgSource, mapPoint.Name, mapPoint.X, mapPoint.Y);
+            string method = string.Format("UpdateMapPoint('{0}','{1}',[{2},{3}],'{4}');", mapPoint.ImgSource, mapPoint.Name, mapPoint.X, mapPoint.Y,mapPoint.PointColor);
             browser.ExecuteScriptAsync(method);
         }
     }

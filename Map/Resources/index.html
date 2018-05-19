@@ -16,9 +16,7 @@
     <script> 
         var markers = [];
         LoadMap = function (scale, center) {
-            console.log(scale);
-            console.log(center);
-            
+          
              map = new AMap.Map('container', {
                 resizeEnable: true,
                 zoom: scale,
@@ -42,7 +40,7 @@
                     for (var i = 0; i < items.length; i++) {
                         //创建SimpleMarker实例
                         var point = [items[i].X, items[i].Y];
-                        console.log(point);
+                        
                         var marker = new SimpleMarker({
                             //前景文字
                             iconLabel: items[i].Lable,
@@ -61,7 +59,7 @@
                         markers.push(marker);
                     }
                     //AddMapPoint();
-                    console.log(markers);
+                     
                 });
         }
           
@@ -69,21 +67,22 @@
     <script>
         $(document).ready(function () {
              //添加坐标点标记
-            AddMapPoint = function (lable, name, coord) {
-                console.log(lable);
-                console.log(name);
-                console.log(coord);
+            AddMapPoint = function (lable, name, coord, pointcolor) {
+               
+                if (pointcolor == null || pointcolor.length == 0) {
+                    pointcolor = "blue";
+                }
                 var point =[coord[0], coord[1]]; //X,Y
                 AMapUI.loadUI(['overlay/SimpleMarker'], function (SimpleMarker) {
                    var marker= new SimpleMarker({
                         iconTheme: 'default',
-                        //使用内置的iconStyle
-                        iconStyle: 'blue',
+                       //使用内置的iconStyle
+                       iconStyle: pointcolor,
                         //图标文字
-                        iconLabel: {                            
-                            innerHTML: '<i>' + lable + '</i>',
+                       iconLabel: {
+                           innerHTML: lable,
                             style: { 
-                                color: '#333'
+                                color: '#fff'
                             }
                         },
                         //显示定位点
@@ -100,14 +99,18 @@
                 });
             }
 
-            UpdateMapPoint = function (icon, name, coord) {     
+            UpdateMapPoint = function (icon, name, coord, pointcolor) {     
                 var point = [coord[0], coord[1]]; //X,Y
+                if (pointcolor == null || pointcolor.length == 0) {
+                    pointcolor = "blue";
+                }
                 for (var i = 0; i < markers.length; i++) {
                     var item = markers[i];
                     if (item.Id === name) {
                         console.log(item);
                         item.Id = name;
                         item.setPosition(point); //更新点标记位置
+                        item.setIconStyle(pointcolor);//更新点标记颜色
                         //item.setIcon(null);
                         //var img = new AMap.Icon({
                         //    size: new AMap.Size(40, 50),  //图标大小
@@ -120,16 +123,22 @@
             }
 
             DelMapPoint = function (name) { 
-                console.log(11111); 
+              
+                var index=-1;
                 for (var i = 0; i < markers.length; i++) {
                     var item = markers[i];
                     if (item.Id === name) {
-                        console.log(item);
+                        index = i;                     
                         item.setMap(null);
                         item = null;
                         break;
                     }
-                } 
+                }
+                console.log(markers.length);
+                if (index > -1) {
+                    markers.splice(index, 1);//删除元素
+                }
+                console.log(markers.length);
             }
 
         });
